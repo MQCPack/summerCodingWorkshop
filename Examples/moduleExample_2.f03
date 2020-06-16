@@ -82,6 +82,10 @@
       write(*,*)' Here is matrixI:'
       call print_matrix(matrixI)
 !
+!     Form matrixC = sqrt(matrixA)
+!
+      matrixC = SQRT(matrixA)
+      write(*,*)' Here is matrixC:'
+      call print_matrix(matrixC)
+!
       end program moduleExample_2
-
-
