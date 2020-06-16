@@ -13,17 +13,20 @@
 !
       CONTAINS
 !
-      subroutine print_matrix_integer(matrix)
+      subroutine print_matrix_integer(matrix,header)
 !
 !     This subroutine prints a square integer matrix whose dimension is less than 6.
 !
       implicit none
       integer,dimension(:,:),intent(in)::matrix
+      character(len=*),intent(in),optional::header
       integer::i
 !
 !     Print the matrix.
 !
  1000 Format(I10,4x,I10,4x,I10,4x,I10,4x,I10,4x,I10)
+ 2000 Format(1x,A)
+      if(PRESENT(header)) write(*,2000) TRIM(header)
       do i = 1,Size(matrix,1)
         write(*,1000) matrix(i,:)
       endDo
@@ -32,17 +35,20 @@
       end subroutine print_matrix_integer
 
 
-      subroutine print_matrix_real(matrix)
+      subroutine print_matrix_real(matrix,header)
 !
 !     This subroutine prints a square real matrix whose dimension is less than 6.
 !
       implicit none
       real,dimension(:,:),intent(in)::matrix
+      character(len=*),intent(in),optional::header
       integer::i
 !
 !     Print the matrix.
 !
  1000 Format(f10.5,4x,f10.5,4x,f10.5,4x,f10.5,4x,f10.5,4x,f10.5)
+ 2000 Format(1x,A)
+      if(PRESENT(header)) write(*,2000) TRIM(header)
       do i = 1,Size(matrix,1)
         write(*,1000) matrix(i,:)
       endDo
@@ -86,6 +92,6 @@
 !
       matrixC = SQRT(matrixA)
       write(*,*)' Here is matrixC:'
-      call print_matrix(matrixC)
+      call print_matrix(header='Here is matrixC in the print routine...',matrix=matrixC)
 !
       end program moduleExample_2
