@@ -5,6 +5,25 @@
 !
       CONTAINS
 !
+      subroutine print_matrix_integer(matrix)
+!
+!     This subroutine prints a square integer matrix whose dimension is less than 6.
+!
+      implicit none
+      integer,dimension(:,:),intent(in)::matrix
+      integer::i
+!
+!     Print the matrix.
+!
+ 1000 Format(I10,4x,I10,4x,I10,4x,I10,4x,I10,4x,I10)
+      do i = 1,Size(matrix,1)
+        write(*,1000) matrix(i,:)
+      endDo
+!
+      return
+      end subroutine print_matrix_integer
+
+
       subroutine print_matrix(matrix)
 !
 !     This subroutine prints a square matrix whose dimension is less than 6.
