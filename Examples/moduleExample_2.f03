@@ -1,6 +1,14 @@
       module moduleExample_2_mod
       implicit none
 !
+!     Procedure Interfaces
+!
+      interface print_matrix
+        module procedure print_matrix_integer
+        module procedure print_matrix_real
+      end interface print_matrix
+
+!
 !     Here are subroutines and functions for my program.
 !
       CONTAINS
@@ -61,9 +69,9 @@
       write(*,*)' Matrix A:'
       write(*,*) matrixA
       write(*,*)' Here is Matrix A:'
-      call print_matrix_real(matrixA)
+      call print_matrix(matrixA)
       write(*,*)' Here is Matrix B:'
-      call print_matrix_real(matrixB)
+      call print_matrix(matrixB)
 !
 !     Fill integer matrixI and matrixJ with random numbers.
 !
@@ -72,7 +80,7 @@
       write(*,*)' Matrix I:'
       write(*,*) matrixI
       write(*,*)' Here is matrixI:'
-      call print_matrix_integer(matrixI)
+      call print_matrix(matrixI)
 !
       end program moduleExample_2
 
