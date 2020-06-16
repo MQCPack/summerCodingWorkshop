@@ -24,9 +24,9 @@
       end subroutine print_matrix_integer
 
 
-      subroutine print_matrix(matrix)
+      subroutine print_matrix_real(matrix)
 !
-!     This subroutine prints a square matrix whose dimension is less than 6.
+!     This subroutine prints a square real matrix whose dimension is less than 6.
 !
       implicit none
       real,dimension(:,:),intent(in)::matrix
@@ -40,7 +40,7 @@
       endDo
 !
       return
-      end subroutine print_matrix
+      end subroutine print_matrix_real
 !
       end module moduleExample_2_mod
 
@@ -61,9 +61,9 @@
       write(*,*)' Matrix A:'
       write(*,*) matrixA
       write(*,*)' Here is Matrix A:'
-      call print_matrix(matrixA)
+      call print_matrix_real(matrixA)
       write(*,*)' Here is Matrix B:'
-      call print_matrix(matrixB)
+      call print_matrix_real(matrixB)
 !
 !     Fill integer matrixI and matrixJ with random numbers.
 !
@@ -71,6 +71,8 @@
       matrixI = matrixC*100
       write(*,*)' Matrix I:'
       write(*,*) matrixI
+      write(*,*)' Here is matrixI:'
+      call print_matrix_integer(matrixI)
 !
       end program moduleExample_2
 
