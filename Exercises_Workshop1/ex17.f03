@@ -6,6 +6,12 @@
         real::realPart,imaginaryPart
       end type myComplex
 !
+!     Operator Interfaces...
+!
+      interface operator (+)
+        module procedure do_myComplex_add
+      end interface
+!
 !     Module Procedures...
 !
       Contains
@@ -24,6 +30,39 @@
 !
       return
       end subroutine print_myComplex
+
+
+      subroutine myComplex_add(val1,val2,mySum)
+!
+!     This subroutine forms the sum of two arguments, val1 and val2, which are
+!     of type myComplex.
+!
+      implicit none
+      type(myComplex),intent(in)::val1,val2
+      type(myComplex),intent(out)::mySum
+!
+      mySum%realPart      = val1%realPart + val2%realPart
+      mySum%imaginaryPart = val1%imaginaryPart + val2%imaginaryPart
+!
+      return
+      end subroutine myComplex_add
+
+
+      function do_myComplex_add(val1,val2) result(mySum)
+!
+!     This function forms the sum of two arguments, val1 and val2, which are
+!     of type myComplex.
+!
+      implicit none
+      type(myComplex),intent(in)::val1,val2
+      type(myComplex)::mySum
+!
+      mySum%realPart      = val1%realPart + val2%realPart
+      mySum%imaginaryPart = val1%imaginaryPart + val2%imaginaryPart
+!
+      return
+      end function do_myComplex_add
+
 
       end module ex17_mod
 
@@ -53,5 +92,29 @@
       call print_myComplex(user1)
       write(*,*)' user2:'
       call print_myComplex(user2)
+!
+!     Form the sum of user1 and user2. Then, print the result.
+!
+      call myComplex_add(user1,user2,sum12)
+      write(*,*)' The sum of your two complex numbers is:'
+      call print_myComplex(sum12)
+!
+!     Form the sum of user1 and user2 again; this time let's use the new
+!     function do_myComplex_add.
+!
+      sum12 = do_myComplex_add(user1,user2)
+      write(*,*)' The sum of your two complex numbers using the function, is:'
+      call print_myComplex(sum12)
+      write(*,*)' ...and again...'
+      call print_myComplex(do_myComplex_add(user1,user2))
+!
+!     Take the sum user1 and sum12.
+!
+      write(*,*)' The sum of user1 and sum12 = user1 + user1 + user2...'
+      sum12 = user1 + sum12
+      call print_myComplex(sum12)
+      write(*,*)' ...and again...'
+      sum12 = user1 + user1 + user2
+      call print_myComplex(sum12)
 !
       end program ex17
