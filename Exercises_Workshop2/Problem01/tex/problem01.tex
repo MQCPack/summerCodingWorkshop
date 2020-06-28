@@ -1,45 +1,47 @@
-\LoadClass[homework,duemidnight]{hph}
-\setcoursename{Chem 212}
-\setactivitynumber{3}
-\setduedate{December 11, 2018}
+\LoadClass[notes]{hph}
+\setauthor{Hrant P.~Hratchian}
+\settitle{Summer Fortran Workshop: Problem 1 -- The Modified Particle in a Box}
+\setrunningtitle{Summer Fortran Workshop: Problem 1}
+\setdate{\today}
+\setcounter{chapter}{1}
 %
 \begin{document}
 \makeheaderfooter{}
 \maketitle
+%
+%
+% Section: Introduction and Problem Definition
+\section{Introduction and Problem Definition}
+Consider a one-dimensional particle-in-a-box (PIB) where the potential is $\infty$ for $x < {}0$ and $x > L$. In the range from $0$ to $L$, let the potential energy be given by $V\left(x\right) = b x$. Using atomic units, write a Fortran program that solves for the eigenfunctions and eigenvalues of the first five states of this system. Use the linear variational method to carry out this numerical problem. The standard one-dimensional particle-in-a-box eigenfunctions should be used as your basis set.
+
+The PIB problem is a standard model system case studied in quantum mechanics. A brief overview of the model and key results are described below in Section \ref{Section:TheoreticalBackground}. This problem introduces a non-zero potential inside the box. This programming problem solves for this modified-PIB (mPIB) using the linear variational method, which is also described in Section \ref{Section:TheoreticalBackground}.
+
+The program should take a set of six input arguments from the command line: mass, box length $L$, slope parameter $b$, and the number of basis functions to be used in the calculation.
+
+The program should output the eigenvalues and expansion coefficients for the ground and first excited state.
 
 %
-% Altered particle in a box using Mathematica.
-\begin{problem1}
-Consider a one-dimensional particle in a box where the potential is
-$\infty$
-for $x < {}0$ and $x > L$. In the range from $0$ to $L$, let the
-potential energy be given by $V\left(x\right) = m x$. Using $h=m=L=1$,
-write a Mathematica notebook that solves for the eigenfunctions and
-eigenvalues of the first five states of this system. Use the linear variational
-method to carry out this numerical problem. The standard one-dimensional
-particle-in-a-box eigenfunctions should be used as your basis set.
+% Section: Theoretical Background
+\section{Theoretical Background}\label{Section:TheoreticalBackground}
+This coding problem relies on two theoretical background topics: (1) the particle-in-a-box problem; and (2) the linear variational method.
 
-\begin{subproblem1}
-How does the ground state energy vary as a function of the number of basis
-functions? To explore this point, begin by using the two lowest energy
-states of the standard particle-in-a-box system as your set of basis
-functions. Then, use the first three states of the standard
-particle-in-a-box as your basis set. Follow this by numerical tests using
-four, five, six, seven, eight, nine, and ten states. Plot the ground state
-energy as a function of the number of basis functions used.
-\end{subproblem1}
+\subsection{Particle-in-a-Box}
+The PIB eigenfunctions are
+%
+\begin{equation}
+\displaystyle
+  \ket{n} = 
+\end{equation}
 
-\begin{subproblem1}
-Repeat the previous experiment with the potential function changed to
-$V\left(x\right) = 10 m x$.
-\end{subproblem1}
 
-\begin{subproblem1}
-Plot the ground state wavefunction for the previous two problems using an
-appropriately converged basis set size. Comment on the effect of the added
-potential on the shape of the ground state wavefunction.
-\end{subproblem1}
+\subsection{Linear Variational Method}
 
-\end{problem1}
+
+
+%How does the ground state energy vary as a function of the number of basis functions? To explore this point, begin by using the two lowest energy states of the standard particle-in-a-box system as your set of basis functions. Then, use the first three states of the standard particle-in-a-box as your basis set. Follow this by numerical tests using four, five, six, seven, eight, nine, and ten states. Plot the ground state energy as a function of the number of basis functions used.
+%
+%Repeat the previous experiment with the potential function changed to $V\left(x\right) = 10 m x$.
+%
+%Plot the ground state wavefunction for the previous two problems using an appropriately converged basis set size. Comment on the effect of the added potential on the shape of the ground state wavefunction.
 %
 \end{document}
