@@ -12,7 +12,7 @@
 %
 % Section: Introduction and Problem Definition
 \section{Introduction and Problem Definition}
-Consider a one-dimensional particle-in-a-box (PIB) where the potential is $\infty$ for $x < {}0$ and $x > L$. In the range from $0$ to $L$, let the potential energy be given by $V\left(x\right) = b x$. Using atomic units, write a Fortran program that solves for the eigenfunctions and eigenvalues of the first five states of this system. Use the linear variational method to carry out this numerical problem. The standard one-dimensional particle-in-a-box eigenfunctions should be used as your basis set.
+Consider a \emph{modified} one-dimensional particle-in-a-box (\emph{m}PIB) where the potential is $\infty$ for $x\le{}0$ and $x\ge{}L$. In the range from $0$ to $L$, let the potential energy be given by $V\left(x\right) = b x$. Using atomic units, write a Fortran program that solves for the eigenfunctions and eigenvalues of the first five states of this system. Use the linear variational method to carry out this numerical problem. The standard one-dimensional PIB eigenfunctions should be used as your basis set.
 
 The PIB problem is a standard model system case studied in quantum mechanics. A brief overview of the model and key results are described below in Section \ref{Section:TheoreticalBackground}. This problem introduces a non-zero potential inside the box. This programming problem solves for this modified-PIB (mPIB) using the linear variational method, which is also described in Section \ref{Section:TheoreticalBackground}.
 
@@ -26,13 +26,24 @@ The program should output the eigenvalues and expansion coefficients for the gro
 This coding problem relies on two theoretical background topics: (1) the particle-in-a-box problem; and (2) the linear variational method.
 
 \subsection{Particle-in-a-Box}
-The PIB eigenfunctions are
+As mentioned above, the one-dimensional particle-in-a-box (PIB) is a model system where the potential is $\infty$ for $x \le{}0$ and $x \ge{} L$. Most derivations begin by dividing the coordinate space into three regions: Region I ($x\le{}0$), Region II ($0<x<L$), and Region III ($x\ge{}L$). Regions I and III the potential energy is $\infty$ and it is trivial to show that the wave function vanishes.
+
+In Region II, a set of discrete quantum states are found. A quantum number, $n$, is determined to have allowed values $1, 2, 3, \cdots{}$.
 %
 \begin{equation}
 \displaystyle
-  \ket{n} = 
+  \braket{x}{n} = \psi(x) = \left(\frac{2}{L}\right)^{\sfrac{1}{2}}\sin{\left(\frac{n \pi}{L}x\right)}
+    \,\,\,\,\,\,\,\,\,\,0<x<L\,\,\,\,\,\,\,\,\,\,n=1,2,3,\cdots{}
 \end{equation}
-
+%
+and the quantized energy levels $\left\{E_n\right\}$ are
+%
+\begin{equation}\label{Eq:PIBenergies}
+\displaystyle{}
+  E_n = \frac{\pi^2}{2 m L^2}n^2\,\,\,\,\,\,\,\,\,\,n=1,2,3,\cdots{}
+\end{equation}
+%
+Note that the energies in Eq.~(\ref{Eq:PIBenergies}) are given in atomic units ($\hbar=1$).
 
 \subsection{Linear Variational Method}
 
