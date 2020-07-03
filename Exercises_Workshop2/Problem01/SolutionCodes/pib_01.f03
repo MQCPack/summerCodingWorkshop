@@ -38,7 +38,8 @@ INCLUDE 'pib_mod.f03'
  2000 Format('< m | T | n > = ',F12.5)
  2010 Format('< m | V | n > = ',F12.5)
  9000 Format('Incorrect number of command line arguments.',/,  &
-        'Expected 5 but found ',I2,'.')
+        'Expected 5 but found ',I2,'.'/,  &
+        'The list of arguments is: mass boxLength slope qnM qnN')
  9100 Format('Input parameter ',A,' must be greater than 0.')
  9999 Format(/,'PROGRAM FAILED!')
 !
