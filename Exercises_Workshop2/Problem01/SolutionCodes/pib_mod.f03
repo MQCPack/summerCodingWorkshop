@@ -14,7 +14,7 @@
 !       pi   ...  A real with the value of pi.
 !
       integer,parameter::iOut=6
-      real,parameter::pi=4*ATan(1)
+      real,parameter::pi=4*ATan(float(1))
 !
 !
 !     Module Procedures
