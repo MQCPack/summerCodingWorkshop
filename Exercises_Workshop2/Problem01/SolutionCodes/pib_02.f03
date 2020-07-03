@@ -1,20 +1,21 @@
 INCLUDE 'pib_mod.f03'
-      program pib_01
+      program pib_02
       USE pib_mod
 !
 !     USAGE:
-!       ./pib_02.exe <mass> <boxLength> <slope> <qnM> <qnN>
+!       ./pib_02.exe <mass> <boxLength> <slope> <qnM> <qnN> <nBasis>
 !
 !     ABOUT:
-!     This program is used as a unit test of the modified Particle-in-a-Box
-!     (mPIB) problem. In this problem, the standard PIB potential is modified to
-!     include a linear potential within the box (0 < x < L) given by V(x) = bx.
+!     This program builds and prints the Hamiltonian for the modified Particle-
+!     in-a-Box (mPIB) problem. In this problem, the standard PIB potential is
+!     modified to include a linear potential within the box (0 < x < L) given by
+!     V(x) = bx.
 !
-!     This specific unit test accepts command line arguments for the mass, box
-!     length, slope parameter b, and two PIB quantum numbers (m and n). The
-!     program reports kinetic energy, potential energy, and Hamiltonian matrix
-!     elements for the system where standard PIB eigenfunctions m and n are
-!     taken in the bra and ket of each matrix element, respectively.
+!     This program accepts command line arguments for the mass, box length,
+!     slope parameter b, two PIB quantum numbers (m and n), and the number of
+!     basis functions to use (nBasis; taken to mean the first nBasis PIB
+!     eigenfunctions). The program reports kinetic energy, potential energy, and
+!     Hamiltonian matrices.
 !
 !     All input and results are taken to be in atomic units.
 !
@@ -25,8 +26,10 @@ INCLUDE 'pib_mod.f03'
 !     Variable Declarations
 !
       implicit none
-      integer::nArguments,qnM,qnN
+      integer::i,j,nArguments,qnM,qnN,nBasis
       real::mass,boxLength,slope
+      real,dimension(:,:),allocatable::kineticEnergyMatrix,  &
+        potentialEnergyMatrix,hamiltonianMatrix
       character(len=256)::commandLineArg
       logical::fail=.false.
 !
@@ -38,13 +41,14 @@ INCLUDE 'pib_mod.f03'
         2x,'boxLength = ',F10.3,/,  &
         2x,'slope     = ',F10.3,/,  &
         2x,'qnM       = ',I4,/,  &
-        2x,'qnN       = ',I4,/)
+        2x,'qnN       = ',I4,/,  &
+        2x,'nBasis    = ',I4,/)
  2000 Format('< m | T | n > = ',F12.5)
  2010 Format('< m | V | n > = ',F12.5)
  9000 Format('Incorrect number of command line arguments.',/,  &
         'Expected 5 but found ',I2,'.'/,  &
         'The list of arguments is:',/,  &
-        3x,'<mass> <boxLength> <slope> <qnM> <qnN>')
+        3x,'<mass> <boxLength> <slope> <qnM> <qnN> <nBasis>')
  9100 Format('Input parameter ',A,' must be greater than 0.')
  9999 Format(/,'PROGRAM FAILED!')
 !
@@ -52,7 +56,7 @@ INCLUDE 'pib_mod.f03'
 !     number, read-in the values, and echo the input as output.
 !
       nArguments = COMMAND_ARGUMENT_COUNT()
-      if(nArguments.ne.5) then
+      if(nArguments.ne.6) then
         write(iOut,9000) nArguments
         fail = .true.
         goto 999
@@ -67,7 +71,9 @@ INCLUDE 'pib_mod.f03'
       read(commandLineArg,*) qnM
       call GET_COMMAND_ARGUMENT(5,commandLineArg)
       read(commandLineArg,*) qnN
-      write(iOut,1000) mass,boxLength,slope,qnM,qnN
+      call GET_COMMAND_ARGUMENT(5,commandLineArg)
+      read(commandLineArg,*) nBasis
+      write(iOut,1000) mass,boxLength,slope,qnM,qnN,nBasis
       if(mass.le.0) then
         write(iOut,9100) 'mass'
         fail = .true.
@@ -88,14 +94,35 @@ INCLUDE 'pib_mod.f03'
         write(iOut,9100) 'qnN'
         fail = .true.
       endIf
+      if(qnN.le.0) then
+        write(iOut,9100) 'nBasis'
+        fail = .true.
+      endIf
       if(fail) goto 999
 !
-!     Calculate the requested kinetic and potential energy matrix elements.
+!     Allocate memory for the kinetic, potential, and Hamiltonian matrices.
 !
-      write(iOut,2000) kineticEnergy(mass,boxLength,qnM,qnN)
-      write(iOut,2010) potentialEnergy(mass,boxLength,slope,qnM,qnN)
+      Allocate(kineticEnergyMatrix(nBasis,nBasis),  &
+        potentialEnergyMatrix(nBasis,nBasis),  &
+        hamiltonianMatrix(nBasis,nBasis))
+!
+!     Calculate the kinetic energy matrix element.
+!
+      do i = 1,nBasis
+        do j = 1,nBasis
+          kineticEnergyMatrix(i,j) = kineticEnergy(mass,boxLength,qnM,qnN)
+          potentialEnergyMatrix(i,j) = potentialEnergy(mass,boxLength,slope,qnM,qnN)
+        endDo
+      endDo
+      hamiltonianMatrix = kineticEnergyMatrix + potentialEnergyMatrix
+!
+!     Print out the kinetic energy, potential energy, and Hamiltonian matrices.
+!
+
+
+
 !
 !     Complete the program...
 !
   999 if(fail) write(iOut,9999)
-      end program pib_01
+      end program pib_02
