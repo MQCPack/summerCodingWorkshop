@@ -1,6 +1,8 @@
 INCLUDE 'pib_mod.f03'
+INCLUDE 'print_mod.f03'
       program pib_02
       USE pib_mod
+      USE print_mod
 !
 !     USAGE:
 !       ./pib_02.exe <mass> <boxLength> <slope> <qnM> <qnN> <nBasis>
@@ -71,7 +73,7 @@ INCLUDE 'pib_mod.f03'
       read(commandLineArg,*) qnM
       call GET_COMMAND_ARGUMENT(5,commandLineArg)
       read(commandLineArg,*) qnN
-      call GET_COMMAND_ARGUMENT(5,commandLineArg)
+      call GET_COMMAND_ARGUMENT(6,commandLineArg)
       read(commandLineArg,*) nBasis
       write(iOut,1000) mass,boxLength,slope,qnM,qnN,nBasis
       if(mass.le.0) then
@@ -110,17 +112,17 @@ INCLUDE 'pib_mod.f03'
 !
       do i = 1,nBasis
         do j = 1,nBasis
-          kineticEnergyMatrix(i,j) = kineticEnergy(mass,boxLength,qnM,qnN)
-          potentialEnergyMatrix(i,j) = potentialEnergy(mass,boxLength,slope,qnM,qnN)
+          kineticEnergyMatrix(i,j) = kineticEnergy(mass,boxLength,i,j)
+          potentialEnergyMatrix(i,j) = potentialEnergy(mass,boxLength,slope,i,j)
         endDo
       endDo
       hamiltonianMatrix = kineticEnergyMatrix + potentialEnergyMatrix
 !
 !     Print out the kinetic energy, potential energy, and Hamiltonian matrices.
 !
-
-
-
+      call print_matrix_full_real(kineticEnergyMatrix,nBasis,nBasis)
+      call print_matrix_full_real(potentialEnergyMatrix,nBasis,nBasis)
+      call print_matrix_full_real(hamiltonianMatrix,nBasis,nBasis)
 !
 !     Complete the program...
 !
