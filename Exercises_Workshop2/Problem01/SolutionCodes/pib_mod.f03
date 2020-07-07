@@ -16,6 +16,12 @@
       integer,parameter::iOut=6
       real,parameter::pi=float(4)*ATan(1.0)
 !
+!     Procedure Interfaces
+!
+      Interface print_matrix
+        module procedure print_matrix_full_real
+      end Interface
+!
 !
 !     Module Procedures
 !
@@ -90,6 +96,40 @@
 !
       return
       end function potentialEnergy
+!
+!PROCEDURE print_matrix_full_real
+      subroutine print_matrix_full_real(amat)
+!
+!     This subroutine prints a real matrix that is fully dimension - i.e., not
+!     stored in packed form. AMat is the matrix.
+!
+!     The output of this routine is sent to unit number 6 (set by the local
+!     parameter integer IOut).
+!
+!
+!     Variable Declarations
+!
+      implicit none
+      real,dimension(:,:),intent(in)::AMat
+!
+!     Local variables
+      integer,parameter::IOut=6,NColumns=5
+      integer::i,j,IFirst,ILast
+!
+ 1000 Format(1x,A)
+ 2000 Format(5x,5(7x,I7))
+ 2010 Format(1x,I7,5F14.6)
+!
+      do ifirst = 1,SIZE(AMat,2),ncolumns
+        ILast = Min(IFirst+NColumns-1,SIZE(AMat,2))
+        write(IOut,2000) (i,i=IFirst,ILast)
+        do i = 1,SIZE(AMat,1)
+          write(IOut,2010) i,(AMat(i,j),j=IFirst,ILast)
+        endDo
+      endDo
+!
+      return
+      end subroutine print_matrix_full_real
 !
 !
       end module pib_mod
