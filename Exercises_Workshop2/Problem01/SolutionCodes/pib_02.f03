@@ -5,7 +5,7 @@ INCLUDE 'print_mod.f03'
       USE print_mod
 !
 !     USAGE:
-!       ./pib_02.exe <mass> <boxLength> <slope> <qnM> <qnN> <nBasis>
+!       ./pib_02.exe <mass> <boxLength> <slope> <nBasis>
 !
 !     ABOUT:
 !     This program builds and prints the Hamiltonian for the modified Particle-
@@ -14,10 +14,9 @@ INCLUDE 'print_mod.f03'
 !     V(x) = bx.
 !
 !     This program accepts command line arguments for the mass, box length,
-!     slope parameter b, two PIB quantum numbers (m and n), and the number of
-!     basis functions to use (nBasis; taken to mean the first nBasis PIB
-!     eigenfunctions). The program reports kinetic energy, potential energy, and
-!     Hamiltonian matrices.
+!     slope parameter b, and the number of basis functions to use (nBasis; taken
+!     to mean the first nBasis PIB eigenfunctions). The program reports kinetic
+!     energy, potential energy, and Hamiltonian matrices.
 !
 !     All input and results are taken to be in atomic units.
 !
@@ -28,7 +27,7 @@ INCLUDE 'print_mod.f03'
 !     Variable Declarations
 !
       implicit none
-      integer::i,j,nArguments,qnM,qnN,nBasis
+      integer::i,j,nArguments,nBasis
       real::mass,boxLength,slope
       real,dimension(:,:),allocatable::kineticEnergyMatrix,  &
         potentialEnergyMatrix,hamiltonianMatrix
@@ -42,15 +41,14 @@ INCLUDE 'print_mod.f03'
         2x,'mass      = ',F10.3,/,  &
         2x,'boxLength = ',F10.3,/,  &
         2x,'slope     = ',F10.3,/,  &
-        2x,'qnM       = ',I4,/,  &
-        2x,'qnN       = ',I4,/,  &
         2x,'nBasis    = ',I4,/)
- 2000 Format('< m | T | n > = ',F12.5)
- 2010 Format('< m | V | n > = ',F12.5)
+ 2000 Format('< i | T | j > = ')
+ 2010 Format('< i | V | j > = ')
+ 2020 Format('< i | H | j > = ')
  9000 Format('Incorrect number of command line arguments.',/,  &
         'Expected 5 but found ',I2,'.'/,  &
         'The list of arguments is:',/,  &
-        3x,'<mass> <boxLength> <slope> <qnM> <qnN> <nBasis>')
+        3x,'<mass> <boxLength> <slope> <nBasis>')
  9100 Format('Input parameter ',A,' must be greater than 0.')
  9999 Format(/,'PROGRAM FAILED!')
 !
@@ -58,7 +56,7 @@ INCLUDE 'print_mod.f03'
 !     number, read-in the values, and echo the input as output.
 !
       nArguments = COMMAND_ARGUMENT_COUNT()
-      if(nArguments.ne.6) then
+      if(nArguments.ne.4) then
         write(iOut,9000) nArguments
         fail = .true.
         goto 999
@@ -70,12 +68,15 @@ INCLUDE 'print_mod.f03'
       call GET_COMMAND_ARGUMENT(3,commandLineArg)
       read(commandLineArg,*) slope
       call GET_COMMAND_ARGUMENT(4,commandLineArg)
+<<<<<<< HEAD
       read(commandLineArg,*) qnM
       call GET_COMMAND_ARGUMENT(5,commandLineArg)
       read(commandLineArg,*) qnN
       call GET_COMMAND_ARGUMENT(6,commandLineArg)
+=======
+>>>>>>> edbd60a816e8e1113d2221e4ea128c380dda0ec8
       read(commandLineArg,*) nBasis
-      write(iOut,1000) mass,boxLength,slope,qnM,qnN,nBasis
+      write(iOut,1000) mass,boxLength,slope,nBasis
       if(mass.le.0) then
         write(iOut,9100) 'mass'
         fail = .true.
@@ -86,18 +87,6 @@ INCLUDE 'print_mod.f03'
       endIf
       if(slope.le.0) then
         write(iOut,9100) 'slope'
-        fail = .true.
-      endIf
-      if(qnM.le.0) then
-        write(iOut,9100) 'qnM'
-        fail = .true.
-      endIf
-      if(qnN.le.0) then
-        write(iOut,9100) 'qnN'
-        fail = .true.
-      endIf
-      if(qnN.le.0) then
-        write(iOut,9100) 'nBasis'
         fail = .true.
       endIf
       if(fail) goto 999
@@ -120,9 +109,16 @@ INCLUDE 'print_mod.f03'
 !
 !     Print out the kinetic energy, potential energy, and Hamiltonian matrices.
 !
-      call print_matrix_full_real(kineticEnergyMatrix,nBasis,nBasis)
-      call print_matrix_full_real(potentialEnergyMatrix,nBasis,nBasis)
-      call print_matrix_full_real(hamiltonianMatrix,nBasis,nBasis)
+      write(iOut,2000)
+      call print_matrix(kineticEnergyMatrix)
+      write(iOut,2010)
+      call print_matrix(potentialEnergyMatrix)
+      write(iOut,2020)
+      call print_matrix(hamiltonianMatrix)
+!
+!     Diagonalize the Hamiltonian and report eigenvectors and eigenvalues.
+!
+
 !
 !     Complete the program...
 !
