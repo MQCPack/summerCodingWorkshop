@@ -1,8 +1,6 @@
 INCLUDE 'pib_mod.f03'
-INCLUDE 'print_mod.f03'
       program pib_02
       USE pib_mod
-      USE print_mod
 !
 !     USAGE:
 !       ./pib_02.exe <mass> <boxLength> <slope> <nBasis>
@@ -27,16 +25,17 @@ INCLUDE 'print_mod.f03'
 !     Variable Declarations
 !
       implicit none
-      integer::i,j,nArguments,nBasis
+      integer::i,j,k,nArguments,nBasis,lapackInfo
       real::mass,boxLength,slope
+      real,dimension(:),allocatable::hamiltonianEVals,lapackWork
       real,dimension(:,:),allocatable::kineticEnergyMatrix,  &
-        potentialEnergyMatrix,hamiltonianMatrix
+        potentialEnergyMatrix,hamiltonianMatrix,hamiltonianEVecs
       character(len=256)::commandLineArg
       logical::fail=.false.
 !
 !     Format Statements
 !
- 1000 Format('Modified Particle-in-a-Box Program.'/,'Unit Test 1.',/,/,  &
+ 1000 Format('Modified Particle-in-a-Box Program.'/,'Unit Test 2.',/,/,  &
         'Input Parameters:',/,  &
         2x,'mass      = ',F10.3,/,  &
         2x,'boxLength = ',F10.3,/,  &
@@ -50,6 +49,7 @@ INCLUDE 'print_mod.f03'
         'The list of arguments is:',/,  &
         3x,'<mass> <boxLength> <slope> <nBasis>')
  9100 Format('Input parameter ',A,' must be greater than 0.')
+ 9200 Format('Failure solving for Hamiltonian eigensystem.')
  9999 Format(/,'PROGRAM FAILED!')
 !
 !     Find out how many command line arguments there are, ensure it's the right
@@ -68,13 +68,6 @@ INCLUDE 'print_mod.f03'
       call GET_COMMAND_ARGUMENT(3,commandLineArg)
       read(commandLineArg,*) slope
       call GET_COMMAND_ARGUMENT(4,commandLineArg)
-<<<<<<< HEAD
-      read(commandLineArg,*) qnM
-      call GET_COMMAND_ARGUMENT(5,commandLineArg)
-      read(commandLineArg,*) qnN
-      call GET_COMMAND_ARGUMENT(6,commandLineArg)
-=======
->>>>>>> edbd60a816e8e1113d2221e4ea128c380dda0ec8
       read(commandLineArg,*) nBasis
       write(iOut,1000) mass,boxLength,slope,nBasis
       if(mass.le.0) then
@@ -118,7 +111,20 @@ INCLUDE 'print_mod.f03'
 !
 !     Diagonalize the Hamiltonian and report eigenvectors and eigenvalues.
 !
-
+      allocate(hamiltonianEVecs(nbasis,nBasis))
+      allocate(hamiltonianEVals(nBasis),lapackWork(3*nBasis))
+      write(iOut,*)' Hrant - here is the linearized hamiltonian...'
+      hamiltonianEVecs = hamiltonianMatrix
+      call SSYEV('V','L',nBasis,hamiltonianEVecs,nBasis,hamiltonianEVals,  &
+        lapackWork,3*nBasis,lapackInfo)
+      write(iOut,*)' lapackInfo = ',lapackInfo
+      if(lapackInfo.ne.0) then
+        write(iOut,9200)
+        fail = .true.
+        goto 999
+      endIf
+      call print_matrix(RESHAPE(hamiltonianEVecs,[ nBasis,nBasis ]))
+      call print_matrix(RESHAPE(hamiltonianEVals,[ 1,nBasis ]))
 !
 !     Complete the program...
 !
