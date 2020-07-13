@@ -12,9 +12,16 @@
 %
 % Section: Introduction and Problem Definition
 \section{Introduction and Problem Definition}
-Consider a \emph{modified} one-dimensional particle-in-a-box (\emph{m}PIB) where the potential is $\infty$ for $x\le{}0$ and $x\ge{}L$. In the range from $0$ to $L$, let the potential energy be given by $V\left(x\right) = b x$. Using atomic units, write a Fortran program that solves for the eigenfunctions and eigenvalues of the first five states of this system. Use the linear variational method to carry out this numerical problem. The standard one-dimensional PIB eigenfunctions should be used as your basis set.
+Consider a \emph{modified} one-dimensional particle-in-a-box (\emph{m}PIB) where the potential is $\infty$ for $x\le{}0$ and $x\ge{}L$. In the range from $0$ to $L$, let the potential energy be given by
+%
+\begin{equation}\label{Eq:mPIBPotential}
+\displaystyle
+  V\left(x\right) = b x\,\,\,\,\,\,\,\,\,\,0<x<L
+\end{equation}
+%
+Using atomic units, write a Fortran program that solves for the eigenfunctions and eigenvalues of the first five states of this system. Use the linear variational method to carry out this numerical problem. The standard one-dimensional PIB eigenfunctions should be used as your basis set.
 
-The PIB problem is a standard model system case studied in quantum mechanics. A brief overview of the model and key results are described below in Section \ref{Section:TheoreticalBackground}. This problem introduces a non-zero potential inside the box. This programming problem solves for this modified-PIB (mPIB) using the linear variational method, which is also described in Section \ref{Section:TheoreticalBackground}.
+The PIB problem is a standard model system case studied in quantum mechanics. A brief overview of the model and key results are described below in Section \ref{Section:TheoreticalBackground}. This problem introduces a non-zero potential inside the box. This programming problem solves for this mPIB using the linear variational method, which is also described in Section \ref{Section:TheoreticalBackground}.
 
 The program should take a set of six input arguments from the command line: mass, box length $L$, slope parameter $b$, and the number of basis functions to be used in the calculation.
 
@@ -25,6 +32,8 @@ The program should output the eigenvalues and expansion coefficients for the gro
 \section{Theoretical Background}\label{Section:TheoreticalBackground}
 This coding problem relies on two theoretical background topics: (1) the particle-in-a-box problem; and (2) the linear variational method.
 
+%
+% Subsection: Particle-in-a-Box
 \subsection{Particle-in-a-Box}
 As mentioned above, the one-dimensional particle-in-a-box (PIB) is a model system where the potential is $\infty$ for $x \le{}0$ and $x \ge{} L$. Most derivations begin by dividing the coordinate space into three regions: Region I ($x\le{}0$), Region II ($0<x<L$), and Region III ($x\ge{}L$). Regions I and III the potential energy is $\infty$ and it is trivial to show that the wave function vanishes.
 
@@ -45,8 +54,66 @@ and the quantized energy levels $\left\{E_n\right\}$ are
 %
 Note that the energies in Eq.~(\ref{Eq:PIBenergies}) are given in atomic units ($\hbar=1$).
 
+%
+% Subsection: Linear Variational Method
 \subsection{Linear Variational Method}
+The linear variational method is used to solve the Schr\"{o}dinger equation numerically and is the central technique used in this coding problem set. It is an especially useful method when a basis set can be well-defined for the physical system of interest, particularly if the basis set can be systematically increased and refined. The basis set used must satisfy three general requirements. First the members of the basis set should satisfy the same boundary conditions expected for the exact solutions of the Schr\"{o}dinger equation being studies. Second, it must be possible to solve matrix elements of the form
+%
+\begin{equation}
+\displaystyle
+  H_{\alpha\beta} = \braketop{\alpha}{\mathcal{H}}{\beta}
+\end{equation}
+%
+where \ket{\alpha} and \ket{\beta} are members of the chosen basis set and $\mathcal{H}$ is the Hamiltonian. Third, the basis set should either be formally complete or be systematically expandable such that numerical experimentation can sufficiently establish approximate completeness.
+ 
+Given these requirements of the basis set, the development of the linear variational method begins with the Schr\"{o}dinger equation
+%
+\begin{equation}\label{Eq:SchrodingerEquation}
+\displaystyle
+  \mathcal{H}\ket{\Psi} = E\ket{\Psi}
+\end{equation}
+%
+where $\mathcal{H}$ is the Hamiltonian, \ket{\Psi} is the (ground state) eigen-ket (i.e., the wave function), and $E$ is the energy eigenvalue corresponding to \ket{\Psi}. Using a (numerically) complete basis with obeying the same boundary conditions as model potential, which we denote as $\left\{\chi_1, \chi_2, \cdots{}\right\}$, 
+%
+\begin{equation}\label{Eq:basisExpansion}
+\displaystyle
+  \ket{\Psi} \approx{} \sum_n{c_n\ket{\chi_n}}
+\end{equation}
+%
+Substituting Eq.~(\ref{Eq:basisExpansion}) into Eq.~(\ref{Eq:SchrodingerEquation}) yields
+%
+\begin{equation}\label{Eq:SchrodingerEquationExpansion}
+\displaystyle
+  \mathcal{H}\ket{\sum_n{c_n\chi_n}} = E\ket{\sum_n{c_n\chi_n}}
+\end{equation}
+%
+Multiplying on the left by another member of the complete set and invoking the interchange theorem of summation and integration, Eq.~(\ref{Eq:SchrodingerEquationExpansion}) becomes
+%
+\begin{equation}\label{Eq:SchrodingerEquationMatrix1}
+\displaystyle
+  \sum_n{c_n \braketop{m}{\mathcal{H}}{n}} = E\sum_n{c_n\braket{m}{n}}
+\end{equation}
+%
+where index labels $m$ and $n$ have been used to denote \ket{\chi_m} and \ket{\chi_n}.
 
+In the application of the linear variational method used here, the basis set will be the conventional PIB eigenfunctions. Noting that this is an orthonormal basis set, Eq.~(\ref{Eq:SchrodingerEquationMatrix1}) can be written as
+%
+\begin{equation}\label{Eq:SchrodingerEquationMatrix1}
+\displaystyle
+  \sum_n{c_n \braketop{m}{\mathcal{H}}{n}} = E\sum_n{c_n\delta_{mn}}
+\end{equation}
+%
+and, in matrix form as
+%
+\begin{equation}\label{Eq:SchrodingerEquationMatrix2}
+\displaystyle
+\begin{aligned}
+  \sum_n{H_{mn}c_{n}} ={}& Ec_m  \\
+  \mathbf{Hc} ={}& E\mathbf{c}
+\end{aligned}
+\end{equation}
+%
+Equation (\ref{Eq:SchrodingerEquationMatrix2}) is an eigensystem. Once the Hamiltonian matrix elements are solved, a standard eigenvalue decomposition algorithm can be used to find a set of eigenvectors (the expansion coefficients $\mathbf{c}$) and eigenvalues (the expectation energy corresponding to each eigenvector). The eigenvector with the lowest corresponding eigenvalue is the linear variational ground state solution to Eq.~(\ref{Eq:SchrodingerEquation}). The other eigenvectors (with eigenvalues greater than the lowest) are the linear variational method solutions for excited states. Generally, a well chosen basis set that can be systematically increased will converge in the number of basis functions for the ground state and low energy excited states before converging for higher energy excited states.
 
 
 %How does the ground state energy vary as a function of the number of basis functions? To explore this point, begin by using the two lowest energy states of the standard particle-in-a-box system as your set of basis functions. Then, use the first three states of the standard particle-in-a-box as your basis set. Follow this by numerical tests using four, five, six, seven, eight, nine, and ten states. Plot the ground state energy as a function of the number of basis functions used.
