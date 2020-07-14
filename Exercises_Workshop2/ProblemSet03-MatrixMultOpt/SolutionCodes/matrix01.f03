@@ -26,6 +26,7 @@
 !
  1000 Format('n = ',I10,'  Job Time: ',F10.3,' s.')
  9000 Format('Failure reading command line arguments...incorrect number.')
+ 9999 Format('The program FAILED!')
 !
 !     Read the user-specified matrix dimension, n, from the command line.
 !
@@ -57,5 +58,5 @@
       call CPU_TIME(tEnd)
       write(iOut,1000) n,tEnd-tStart
 !
-  999 continue
+  999 if(fail) write(iOut,9999)
       end program matrix01
