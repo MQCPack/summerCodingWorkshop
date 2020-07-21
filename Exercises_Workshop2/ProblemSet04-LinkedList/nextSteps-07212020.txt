@@ -1,0 +1,5 @@
+Some things to add to your linked list module....
+
+** Copy linkedList02.f03 to linkedList03.f03 **
+1. Remove head, ptr, and tail from linkedList03.f03.
+
