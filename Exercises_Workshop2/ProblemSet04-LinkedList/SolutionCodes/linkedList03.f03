@@ -1,5 +1,5 @@
 include 'linkedListMod.f03'
-      program linkedList02
+      program linkedList03
       USE linkedListMod
 !
 !     This is a linked-list program based on the one in Chapman (see Figure
@@ -10,18 +10,11 @@ include 'linkedListMod.f03'
 !
       implicit none
       type(linkedListReal)::list
-      type(real_value),pointer::head
       character(len=256)::filename
       integer::nvals=0
-      type(real_value),pointer::ptr
-      type(real_value),pointer::tail
       integer::istat
       real::temp
 !
-!
-!     Start by nullifying the head pointer.
-!
-      NULLIFY(head)
 !
 !     Get the name of the input file from the user and then open that file.
 !
@@ -38,44 +31,17 @@ include 'linkedListMod.f03'
           if(istat /= 0) exit
           nvals = nvals+1
           call linkedListReal_push(list,temp)
-!          if(.not.ASSOCIATED(head)) then
-!            ALLOCATE(head,STAT=istat)
-!            tail => head
-!            NULLIFY(tail%prev,tail%next)
-!            tail%value = temp
-!          else
-!            ALLOCATE(tail%next,STAT=istat)
-!            ptr => tail
-!            tail => tail%next
-!            tail%prev => ptr
-!            NULLIFY(tail%next)
-!            tail%value = temp
-!          endIf
         endDo
 !
 !       Now, write out the data that we have read.
 !
-        head => list%head
-        tail => list%tail
         write(*,*)' nVals = ',nvals
         write(*,*)' Printing the list in order.'
-        ptr => head
         do
           if(.not.linkedListReal_hasNext(list)) exit
           write(*,*) linkedListReal_getCurrent(list)
         endDo
         write(*,*) linkedListReal_getCurrent(list)
-
-!hph+
-!        write(*,*)' Printing the list in REVERSE order.'
-!        ptr => tail
-!        do
-!          if(.not.ASSOCIATED(ptr)) exit
-!          write(*,*) ptr%value
-!          ptr => ptr%prev
-!        endDo
-!hph-
-
 !
 !     I am done with the work of the program when the file opened correctly.
 !
@@ -86,4 +52,4 @@ include 'linkedListMod.f03'
 !     The program is done...tell the user...
 !
       write(*,*)' The program is complete!'
-      end program linkedList02
+      end program linkedList03

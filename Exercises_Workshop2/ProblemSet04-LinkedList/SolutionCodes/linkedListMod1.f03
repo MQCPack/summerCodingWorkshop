@@ -1,4 +1,4 @@
-      module linkedListMod
+      module linkedListMod1
 !
 !     This module supports a linked list class.
 !
@@ -23,6 +23,38 @@
 !
       CONTAINS
 !
+      subroutine linkedListReal_moveCurrent2Head(myLinkedList)
+!
+!     This subroutine is used to move the current pointer to the head of the
+!     linked list.
+!
+      implicit none
+      type(linkedListReal)::myLinkedList
+!
+!     Move the current pointer to the head.
+!
+      myLinkedList%current => myLinkedList%head
+!
+      return
+      end subroutine linkedListReal_moveCurrent2Head
+
+
+      subroutine linkedListReal_moveCurrent2Tail(myLinkedList)
+!
+!     This subroutine is used to move the current pointer to the tail of the
+!     linked list.
+!
+      implicit none
+      type(linkedListReal)::myLinkedList
+!
+!     Move the current pointer to the tail.
+!
+      myLinkedList%current => myLinkedList%tail
+!
+      return
+      end subroutine linkedListReal_moveCurrent2Tail
+
+
       subroutine linkedListReal_incrementCurrent(myLinkedList,incrementBy)
 !
 !     This subroutine is used to increment the current pointer of a
@@ -48,7 +80,7 @@
         endDo
       elseIf(myIncrementBy.lt.0) then
         do i = 1,ABS(myIncrementBy),-1
-          if(ASSOCIATED(myLinkedList%current%next)) myLinkedList%current=>myLinkedList%current%next
+          if(ASSOCIATED(myLinkedList%current%prev)) myLinkedList%current=>myLinkedList%current%prev
         endDo
       endIf
 !
@@ -56,7 +88,7 @@
       end subroutine linkedListReal_incrementCurrent
 
 
-      function linkedListReal_getCurrent(myLinkedList)
+      function linkedListReal_getCurrent(myLinkedList,incrementBy)
 !
 !     This function returns an intrinsic real value equal to the current node
 !     value. The current position in the linked list always begins at the head
@@ -66,10 +98,21 @@
       implicit none
       type(linkedListReal)::myLinkedList
       real::linkedListReal_getCurrent
+      integer,optional,intent(in)::incrementBy
+      integer::myIncrementBy
+!
+!     Set-up myIncrementBy. The default here is zero.
+!
+      myIncrementBy = 0
+      if(PRESENT(incrementBy)) myIncrementBy = incrementBy
+!
+!     Get the new value. If requested, increment the current node pointer in the
+!     list.
 !
       if(.not.ASSOCIATED(myLinkedList%current)) myLinkedList%current=>myLinkedList%head
       linkedListReal_getCurrent = myLinkedList%current%value
-      call linkedListReal_incrementCurrent(myLinkedList)
+      if(myIncrementBy.ne.0)  &
+        call linkedListReal_incrementCurrent(myLinkedList,incrementBy=myIncrementBy)
 !
       return
       end function linkedListReal_getCurrent
@@ -89,6 +132,23 @@
 !
       return
       end function linkedListReal_hasNext
+
+
+      function linkedListReal_hasPrevious(myLinkedList)
+!
+!     This function returns a logical (TRUE or FALSE) indicating whether or not
+!     the current member of the linked list object has a "previous" node to go
+!     to.
+!
+      implicit none
+      type(linkedListReal)::myLinkedList
+      logical::linkedListReal_hasPrevious
+!
+      if(.not.ASSOCIATED(myLinkedList%current)) myLinkedList%current=>myLinkedList%tail
+      linkedListReal_hasPrevious = ASSOCIATED(myLinkedList%current%prev)
+!
+      return
+      end function linkedListReal_hasPrevious
 
 
       subroutine linkedListReal_push(myLinkedList,newValue)
@@ -121,4 +181,4 @@
       return
       end subroutine linkedListReal_push
 
-      end module linkedListMod
+      end module linkedListMod1
